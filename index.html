@@ -61,7 +61,7 @@
         "Saturday"
       ],
       "opens": "09:00",
-      "closes": "13:30"
+      "closes": "15:30"
     }
   }
   </script>
@@ -80,25 +80,7 @@
   <header>
     <div class="container">
       <div class="logo" id="header-logo">
-        <svg class="logo-icon" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-          <circle cx="50" cy="50" r="45" fill="url(#grad)" />
-          <!-- Animated cute wings design inside the logo -->
-          <path d="M30 45C30 45 25 35 38 32C51 29 48 48 48 48C48 48 43 58 35 55C27 52 30 45 30 45Z" fill="white" opacity="0.9"/>
-          <path d="M70 45C70 45 75 35 62 32C49 29 52 48 52 48C52 48 57 58 65 55C73 52 70 45 70 45Z" fill="white" opacity="0.9"/>
-          <path d="M44 46C44 48.2091 41.5 50 38 50C34.5 50 32 48.2091 32 46C32 43.7909 34.5 42 38 42C41.5 42 44 43.7909 44 46Z" fill="rgba(255,255,255,0.4)"/>
-          <path d="M56 46C56 48.2091 58.5 50 62 50C65.5 50 68 48.2091 68 46C68 43.7909 65.5 42 62 42C58.5 42 56 43.7909 56 46Z" fill="rgba(255,255,255,0.4)"/>
-          <circle cx="50" cy="58" r="6" fill="#FF8A65" />
-          <defs>
-            <linearGradient id="grad" x1="0" y1="0" x2="100" y2="100" gradientUnits="userSpaceOnUse">
-              <stop offset="0%" stop-color="#4FC3F7" />
-              <stop offset="100%" stop-color="#FF8A65" />
-            </linearGradient>
-          </defs>
-        </svg>
-        <div class="logo-text" style="display: flex; flex-direction: column; line-height: 1;">
-          <span style="font-size: 1.35rem; color: var(--primary-sky); font-weight: 700;">The Little <span style="color: var(--primary-coral);">Wings</span></span>
-          <span style="font-size: 0.75rem; font-weight: 600; color: var(--text-light); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px;">Play School</span>
-        </div>
+        <img src="assets/logo.jpeg" alt="The Little Wings Play School Logo" class="logo-img">
       </div>
       
       <button class="mobile-toggle" aria-label="Toggle Navigation">
@@ -126,7 +108,7 @@
     <div class="container">
       <div class="hero-grid">
         <div class="hero-content">
-          <h1>Where <span class="highlight-sky">Little Wings</span><br>Take <span class="highlight-coral">Big Flights!</span></h1>
+          <h1>Where Learning Begins With Love</h1>
           <p>The premium, secure and joyful play school in Vuyyuru designed to nurture creativity, build confidence, and foster lifelong learning in your child through play-based discovery.</p>
           <div class="hero-buttons">
             <a href="#contact" class="btn btn-coral">Schedule a Tour <i class="fa-solid fa-calendar-days" style="margin-left: 8px;"></i></a>
@@ -317,23 +299,35 @@
               <div class="routine-timeline">
                 <div class="routine-item">
                   <div class="routine-time">09:00 AM</div>
-                  <div class="routine-activity">Circle Time & Morning Warm-up</div>
+                  <div class="routine-activity">Circle Time &amp; Morning Warm-up</div>
                 </div>
                 <div class="routine-item">
                   <div class="routine-time">09:40 AM</div>
-                  <div class="routine-activity">Creative Arts & Messy Play</div>
+                  <div class="routine-activity">Creative Arts &amp; Messy Play</div>
                 </div>
                 <div class="routine-item">
                   <div class="routine-time">10:40 AM</div>
-                  <div class="routine-activity">Nutritious Snack & Sharing Time</div>
+                  <div class="routine-activity">Nutritious Snack &amp; Sharing Time</div>
                 </div>
                 <div class="routine-item">
                   <div class="routine-time">11:15 AM</div>
-                  <div class="routine-activity">Indoor Games & Interactive Puzzles</div>
+                  <div class="routine-activity">Indoor Games &amp; Interactive Puzzles</div>
                 </div>
                 <div class="routine-item">
                   <div class="routine-time">12:30 PM</div>
-                  <div class="routine-activity">Storytelling & Good-bye Circle</div>
+                  <div class="routine-activity">Storytelling &amp; Language Fun</div>
+                </div>
+                <div class="routine-item">
+                  <div class="routine-time">01:15 PM</div>
+                  <div class="routine-activity">Lunch Break &amp; Free Play</div>
+                </div>
+                <div class="routine-item">
+                  <div class="routine-time">02:00 PM</div>
+                  <div class="routine-activity">Art Exploration &amp; Clay Play</div>
+                </div>
+                <div class="routine-item">
+                  <div class="routine-time">03:00 PM</div>
+                  <div class="routine-activity">Rhymes Recap &amp; Good-bye Circle</div>
                 </div>
               </div>
             </div>
@@ -559,16 +553,6 @@
               <input type="tel" id="phone" class="form-control" placeholder="10-digit mobile number" required>
             </div>
 
-            <div class="form-group">
-              <label for="email">Email Address *</label>
-              <input type="email" id="email" class="form-control" placeholder="yourname@gmail.com" required>
-            </div>
-
-            <div class="form-group">
-              <label for="message">Your Message / Enquiries</label>
-              <textarea id="message" class="form-control" placeholder="Tell us about your child's needs or your preferred visit timing..."></textarea>
-            </div>
-
             <button type="submit" class="btn btn-whatsapp" style="width: 100%; justify-content: center; font-size: 1.1rem; padding: 1.1rem;">
               Send Visit Request on WhatsApp <i class="fa-brands fa-whatsapp" style="margin-left: 8px; font-size: 1.3rem;"></i>
             </button>
@@ -587,10 +571,7 @@
       <div class="footer-grid">
         <div class="footer-col">
           <div class="logo footer-logo">
-            <div class="logo-text" style="display: flex; flex-direction: column; line-height: 1;">
-              <span style="font-size: 1.35rem; color: white; font-weight: 700;">The Little <span style="color: var(--primary-yellow);">Wings</span></span>
-              <span style="font-size: 0.75rem; font-weight: 600; color: rgba(255,255,255,0.6); letter-spacing: 1.5px; text-transform: uppercase; margin-top: 2px;">Play School</span>
-            </div>
+            <img src="assets/logo.jpeg" alt="The Little Wings Play School Logo" class="footer-logo-img">
           </div>
           <p>Dedicated to early child developmental care and creative education. Certified safe spaces, high-end infrastructure, and expert educators in Vuyyuru.</p>
           <div class="social-links">
@@ -623,7 +604,7 @@
 
         <div class="footer-col">
           <h3>School Timings</h3>
-          <p style="margin-bottom: 0.8rem; color: rgba(255,255,255,0.7);"><strong style="color: white;">Monday - Friday:</strong><br>09:00 AM - 01:30 PM</p>
+          <p style="margin-bottom: 0.8rem; color: rgba(255,255,255,0.7);"><strong style="color: white;">Monday - Friday:</strong><br>09:00 AM - 03:30 PM</p>
           <p style="margin-bottom: 0.8rem; color: rgba(255,255,255,0.7);"><strong style="color: white;">Saturday:</strong><br>09:00 AM - 12:30 PM</p>
           <p style="color: rgba(255,255,255,0.7);"><strong style="color: white;">Sunday:</strong><br>Holiday</p>
         </div>

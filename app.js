@@ -124,7 +124,10 @@ const milestoneData = {
       { time: '09:30 AM', act: 'Sensory Exploration & Play' },
       { time: '10:30 AM', act: 'Healthy Snack & Milk Break' },
       { time: '11:00 AM', act: 'Motor Skills / Music & Movement' },
-      { time: '12:00 PM', act: 'Nap Time / Quiet Dismissal' }
+      { time: '12:00 PM', act: 'Nap Time & Rest' },
+      { time: '01:00 PM', act: 'Nursery Rhymes & Soft Songs' },
+      { time: '02:00 PM', act: 'Free Play & Sensory Bins' },
+      { time: '03:00 PM', act: 'Storytime & Warm Dismissal' }
     ]
   },
   playgroup: {
@@ -147,7 +150,10 @@ const milestoneData = {
       { time: '09:40 AM', act: 'Creative Arts & Messy Play' },
       { time: '10:40 AM', act: 'Nutritious Snack & Sharing Time' },
       { time: '11:15 AM', act: 'Indoor Games & Interactive Puzzles' },
-      { time: '12:30 PM', act: 'Storytelling & Good-bye Circle' }
+      { time: '12:30 PM', act: 'Storytelling & Language Fun' },
+      { time: '01:15 PM', act: 'Lunch Break & Free Play' },
+      { time: '02:00 PM', act: 'Art Exploration & Clay Play' },
+      { time: '03:00 PM', act: 'Rhymes Recap & Good-bye Circle' }
     ]
   },
   nursery: {
@@ -171,7 +177,10 @@ const milestoneData = {
       { time: '10:30 AM', act: 'Healthy Meal & Social Skills Drill' },
       { time: '11:00 AM', act: 'Playground Fun / Physical Activities' },
       { time: '12:00 PM', act: 'Logical Thinking & Puzzle Solvers' },
-      { time: '01:00 PM', act: 'Story Craft & Warm Dismissal' }
+      { time: '01:00 PM', act: 'Lunch Break & Relaxation' },
+      { time: '01:45 PM', act: 'General Awareness & Story Craft' },
+      { time: '02:30 PM', act: 'Gardening / Role-Play Activities' },
+      { time: '03:15 PM', act: 'Reflection & Warm Dismissal' }
     ]
   },
   kindergarten: {
@@ -196,7 +205,10 @@ const milestoneData = {
       { time: '11:15 AM', act: 'Snack Break & Mindful Conversations' },
       { time: '11:45 AM', act: 'Outdoor Sports / Team Building Games' },
       { time: '12:30 PM', act: 'General Awareness / Science Showcase' },
-      { time: '01:30 PM', act: 'Reflection Time & Home Assembly' }
+      { time: '01:15 PM', act: 'Lunch Break & Relaxation' },
+      { time: '02:00 PM', act: 'Computer Games & Coding Blocks' },
+      { time: '02:45 PM', act: 'EVS Projects / Creative Writing' },
+      { time: '03:15 PM', act: 'Reflection Time & Home Assembly' }
     ]
   }
 };
@@ -344,11 +356,9 @@ function initContactForm() {
       const parentName = document.getElementById('parentName').value.trim();
       const childAge = document.getElementById('childAge').value;
       const phone = document.getElementById('phone').value.trim();
-      const email = document.getElementById('email').value.trim();
-      const message = document.getElementById('message').value.trim();
 
       // Basic front-end validations
-      if (!parentName || !phone || !email || !childAge) {
+      if (!parentName || !phone || !childAge) {
         showFeedback('Please fill out all required fields marked with *.', 'error');
         return;
       }
@@ -357,13 +367,6 @@ function initContactForm() {
       const phonePattern = /^[0-9\-\+\s]{10,15}$/;
       if (!phonePattern.test(phone)) {
         showFeedback('Please enter a valid phone number (at least 10 digits).', 'error');
-        return;
-      }
-
-      // Email check
-      const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailPattern.test(email)) {
-        showFeedback('Please enter a valid email address.', 'error');
         return;
       }
 
@@ -382,9 +385,7 @@ function initContactForm() {
         `I would like to schedule a campus visit and enquire about admissions.\n\n` +
         `*Parent Name*: ${parentName}\n` +
         `*Child's Age*: ${childAgeText}\n` +
-        `*Phone*: ${phone}\n` +
-        `*Email*: ${email}\n` +
-        `*My Message*: ${message ? message : 'N/A'}`;
+        `*Phone*: ${phone}`;
 
       // Show instant feedback
       showFeedback('Connecting to WhatsApp... 🚀', 'success');

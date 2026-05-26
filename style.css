@@ -337,19 +337,24 @@ header .container {
   cursor: pointer;
 }
 
-.logo-icon {
-  width: 45px;
-  height: 45px;
-  animation: float-logo 4s infinite ease-in-out;
+.logo-img {
+  height: 65px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  transition: var(--transition-smooth);
 }
 
-@keyframes float-logo {
-  0%, 100% { transform: translateY(0) rotate(0deg); }
-  50% { transform: translateY(-4px) rotate(8deg); }
+.logo-img:hover {
+  transform: scale(1.05);
 }
 
-.logo-text span {
-  color: var(--primary-coral);
+.footer-logo-img {
+  height: 80px;
+  width: auto;
+  object-fit: contain;
+  border-radius: 8px;
+  filter: drop-shadow(0 2px 8px rgba(255,255,255,0.15));
 }
 
 nav ul {
