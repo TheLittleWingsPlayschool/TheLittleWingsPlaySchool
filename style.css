@@ -362,7 +362,7 @@ header .container {
   position: fixed;
   z-index: 0;
   pointer-events: none;
-  opacity: 0.04;
+  opacity: 0.08;
   animation: float-watermark 20s infinite ease-in-out;
 }
 
