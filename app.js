@@ -126,8 +126,9 @@ const milestoneData = {
       { time: '10:30 AM', act: 'Healthy Snack & Milk Break' },
       { time: '11:00 AM', act: 'Motor Skills / Music & Movement' },
       { time: '12:00 PM', act: 'Nap Time & Rest' },
-      { time: '01:00 PM', act: 'Nursery Rhymes & Soft Songs' },
-      { time: '02:00 PM', act: 'Free Play & Sensory Bins' },
+      { time: '01:00 PM', act: 'Lunch Break & Healthy Habits' },
+      { time: '01:45 PM', act: 'Nursery Rhymes & Soft Songs' },
+      { time: '02:30 PM', act: 'Free Play & Sensory Bins' },
       { time: '03:00 PM', act: 'Storytime & Warm Dismissal' }
     ]
   },
@@ -152,9 +153,10 @@ const milestoneData = {
       { time: '10:40 AM', act: 'Nutritious Snack & Sharing Time' },
       { time: '11:15 AM', act: 'Indoor Games & Interactive Puzzles' },
       { time: '12:30 PM', act: 'Storytelling & Language Fun' },
-      { time: '01:15 PM', act: 'Lunch Break & Free Play' },
-      { time: '02:00 PM', act: 'Art Exploration & Clay Play' },
-      { time: '03:00 PM', act: 'Rhymes Recap & Good-bye Circle' }
+      { time: '01:00 PM', act: 'Lunch Break & Relaxation' },
+      { time: '01:45 PM', act: 'Art Exploration & Clay Play' },
+      { time: '02:30 PM', act: 'Rhymes Recap & Good-bye Circle' },
+      { time: '03:00 PM', act: 'Warm Dismissal' }
     ]
   },
   lkg: {
@@ -206,9 +208,9 @@ const milestoneData = {
       { time: '11:15 AM', act: 'Snack Break & Mindful Conversations' },
       { time: '11:45 AM', act: 'Outdoor Sports / Team Building Games' },
       { time: '12:30 PM', act: 'General Awareness / Science Showcase' },
-      { time: '01:15 PM', act: 'Lunch Break & Relaxation' },
-      { time: '02:00 PM', act: 'Computer Games & Coding Blocks' },
-      { time: '02:45 PM', act: 'EVS Projects / Creative Writing' },
+      { time: '01:00 PM', act: 'Lunch Break & Relaxation' },
+      { time: '01:45 PM', act: 'Computer Games & Coding Blocks' },
+      { time: '02:30 PM', act: 'EVS Projects / Creative Writing' },
       { time: '03:15 PM', act: 'Reflection Time & Home Assembly' }
     ]
   }
