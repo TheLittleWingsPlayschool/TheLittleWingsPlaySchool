@@ -367,14 +367,35 @@ function initContactForm() {
         return;
       }
 
-      // Success flow
-      showFeedback('Sending your message... ✈️', 'success');
+      // Map child's age to standard friendly text
+      const ageLabels = {
+        toddler: '1.5 to 2.5 years (Toddlers Wing)',
+        playgroup: '2.5 to 3.5 years (Playgroup Wing)',
+        nursery: '3.5 to 4.5 years (Nursery Wing)',
+        kindergarten: '4.5 to 6.0 years (Kindergarten Wing)'
+      };
+      const childAgeText = ageLabels[childAge] || childAge;
 
-      // Simulate API dispatch delay
+      // Format WhatsApp Message using professional layout
+      const waMessage = 
+        `Hello The Little Wings Play School! 🎈\n` +
+        `I would like to schedule a campus visit and enquire about admissions.\n\n` +
+        `*Parent Name*: ${parentName}\n` +
+        `*Child's Age*: ${childAgeText}\n` +
+        `*Phone*: ${phone}\n` +
+        `*Email*: ${email}\n` +
+        `*My Message*: ${message ? message : 'N/A'}`;
+
+      // Show instant feedback
+      showFeedback('Connecting to WhatsApp... 🚀', 'success');
+
+      // Open WhatsApp after a short delay so the user understands what is happening
       setTimeout(() => {
-        showFeedback(`Thank you, ${parentName}! Your enquiry has been received successfully. We will call you back on ${phone} within 24 hours.`, 'success');
+        const waUrl = `https://wa.me/917995554105?text=${encodeURIComponent(waMessage)}`;
+        window.open(waUrl, '_blank');
+        showFeedback('WhatsApp opened! Please click "Send" in the WhatsApp chat to submit your enquiry. 📲', 'success');
         form.reset();
-      }, 1500);
+      }, 1000);
     });
   }
 
