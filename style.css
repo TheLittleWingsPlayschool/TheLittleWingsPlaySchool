@@ -528,7 +528,7 @@ nav ul li a:hover::after {
 
 .stats-grid {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(3, 1fr);
   gap: 2rem;
   text-align: center;
 }
@@ -547,7 +547,6 @@ nav ul li a:hover::after {
 
 .stat-item:nth-child(2) .stat-number { color: var(--primary-coral); }
 .stat-item:nth-child(3) .stat-number { color: var(--primary-yellow); }
-.stat-item:nth-child(4) .stat-number { color: var(--primary-green); }
 
 .stat-label {
   font-size: 1.1rem;
