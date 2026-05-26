@@ -9,6 +9,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initTestimonialsCarousel();
   initContactForm();
   initScrollEffects();
+  initDraggableLogo();
 });
 
 /* ==========================================
@@ -439,4 +440,87 @@ function initScrollEffects() {
   });
 
   reveals.forEach(el => observer.observe(el));
+}
+
+/* ==========================================
+   6. DRAGGABLE FLOATING LOGO
+   ========================================== */
+function initDraggableLogo() {
+  const logo = document.getElementById('draggable-floating-logo');
+  if (!logo) return;
+
+  let isDragging = false;
+  let startX = 0;
+  let startY = 0;
+  let initialX = 0;
+  let initialY = 0;
+
+  // Touch start or mouse down
+  const dragStart = (e) => {
+    // Only drag with left click
+    if (e.type === 'mousedown' && e.button !== 0) return;
+
+    // Determine event coordinates
+    const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+
+    isDragging = true;
+    startX = clientX;
+    startY = clientY;
+
+    // Get current coordinates
+    const rect = logo.getBoundingClientRect();
+    initialX = rect.left;
+    initialY = rect.top;
+
+    logo.style.transition = 'none'; // Disable transition during drag
+    logo.style.bottom = 'auto'; // Break from CSS default bottom/right properties
+    logo.style.right = 'auto';
+    logo.style.left = `${initialX}px`;
+    logo.style.top = `${initialY}px`;
+  };
+
+  const dragMove = (e) => {
+    if (!isDragging) return;
+
+    // Prevent default scroll behaviors on mobile while dragging
+    if (e.cancelable) e.preventDefault();
+
+    const clientX = e.type.startsWith('touch') ? e.touches[0].clientX : e.clientX;
+    const clientY = e.type.startsWith('touch') ? e.touches[0].clientY : e.clientY;
+
+    const dx = clientX - startX;
+    const dy = clientY - startY;
+
+    let newX = initialX + dx;
+    let newY = initialY + dy;
+
+    // Limit position inside visible viewport boundaries
+    const logoWidth = logo.offsetWidth;
+    const logoHeight = logo.offsetHeight;
+    const maxX = window.innerWidth - logoWidth - 10;
+    const maxY = window.innerHeight - logoHeight - 10;
+
+    newX = Math.max(10, Math.min(newX, maxX));
+    newY = Math.max(10, Math.min(newY, maxY));
+
+    logo.style.left = `${newX}px`;
+    logo.style.top = `${newY}px`;
+  };
+
+  const dragEnd = () => {
+    if (!isDragging) return;
+    isDragging = false;
+    logo.style.transition = 'transform 0.2s ease, box-shadow 0.2s ease';
+  };
+
+  // Mouse drag listeners
+  logo.addEventListener('mousedown', dragStart);
+  document.addEventListener('mousemove', dragMove);
+  document.addEventListener('mouseup', dragEnd);
+
+  // Touch drag listeners (mobile & tablet support)
+  logo.addEventListener('touchstart', dragStart, { passive: false });
+  document.addEventListener('touchmove', dragMove, { passive: false });
+  document.addEventListener('touchend', dragEnd);
 }
