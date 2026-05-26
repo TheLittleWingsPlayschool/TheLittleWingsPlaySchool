@@ -354,11 +354,12 @@ function initContactForm() {
       e.preventDefault();
       
       const parentName = document.getElementById('parentName').value.trim();
+      const studentName = document.getElementById('studentName').value.trim();
       const childAge = document.getElementById('childAge').value;
       const phone = document.getElementById('phone').value.trim();
 
       // Basic front-end validations
-      if (!parentName || !phone || !childAge) {
+      if (!parentName || !studentName || !phone || !childAge) {
         showFeedback('Please fill out all required fields marked with *.', 'error');
         return;
       }
@@ -384,6 +385,7 @@ function initContactForm() {
         `Hello The Little Wings Play School! 🎈\n` +
         `I would like to schedule a campus visit and enquire about admissions.\n\n` +
         `*Parent Name*: ${parentName}\n` +
+        `*Student Name*: ${studentName}\n` +
         `*Child's Age*: ${childAgeText}\n` +
         `*Phone*: ${phone}`;
 
