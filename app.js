@@ -105,19 +105,19 @@ function initNavigation() {
    ========================================== */
 const milestoneData = {
   toddler: {
-    ageGroup: 'Toddler Wing',
-    ageRange: '1.5 to 2.5 Years',
+    ageGroup: 'Toddlers Wing',
+    ageRange: '1.5 to 3.0 Years',
     milestones: [
-      'Begins basic speech and mimics sounds',
-      'Walks, climbs steps, and begins running',
-      'Explores physical coordinates and objects',
-      'Starts playing alongside other kids (parallel play)'
+      'Begins basic speech, mimicry, and walks/climbs steps',
+      'Explores physical shapes, textures, and sensory tools',
+      'Feeds self and handles simple toys independently',
+      'Starts parallel play and basic social interactions'
     ],
     curriculum: [
       'Sensory and tactile learning activities',
-      'Nursery rhymes, storytelling, and soft songs',
+      'Nursery rhymes, storytelling, and music',
       'Gross motor play (crawling, rolling, balancing)',
-      'Basic vocabulary and object identification'
+      'Basic vocabulary, speech development, and potty training'
     ],
     routine: [
       { time: '09:00 AM', act: 'Welcome & Gentle Circle Time' },
@@ -130,23 +130,23 @@ const milestoneData = {
       { time: '03:00 PM', act: 'Storytime & Warm Dismissal' }
     ]
   },
-  playgroup: {
-    ageGroup: 'Playgroup Wing',
-    ageRange: '2.5 to 3.5 Years',
+  nursery: {
+    ageGroup: 'Nursery Wing',
+    ageRange: '3.0 to 4.0 Years',
     milestones: [
-      'Expresses feelings and short sentences clearly',
-      'Jumps, catches large balls, and sorts shapes/colors',
-      'Feeds self and handles simple toys independently',
+      'Expresses feelings and speaks in full sentences',
+      'Draws basic lines/shapes and sorts colors and sizes',
+      'Follows simple instructions and handles small tasks',
       'Shares toys and makes friends enthusiastically'
     ],
     curriculum: [
-      'Interactive phonics and letters sounds',
-      'Fun counting, shapes and colors grouping',
+      'Interactive phonics and early letter sounds',
+      'Introduction to writing, shapes, and numbers',
       'Art exploration, finger painting, and clay play',
-      'Basic social etiquettes and self-care skills'
+      'Social etiquettes, sharing, and self-care skills'
     ],
     routine: [
-      { time: '09:00 AM', act: 'Circle Time & Morning Warm-up' },
+      { time: '09:00 AM', act: 'Circle Time & Morning Assembly' },
       { time: '09:40 AM', act: 'Creative Arts & Messy Play' },
       { time: '10:40 AM', act: 'Nutritious Snack & Sharing Time' },
       { time: '11:15 AM', act: 'Indoor Games & Interactive Puzzles' },
@@ -156,20 +156,20 @@ const milestoneData = {
       { time: '03:00 PM', act: 'Rhymes Recap & Good-bye Circle' }
     ]
   },
-  nursery: {
-    ageGroup: 'Nursery Wing',
-    ageRange: '3.5 to 4.5 Years',
+  lkg: {
+    ageGroup: 'Lower Kindergarten',
+    ageRange: '4.0 to 5.0 Years',
     milestones: [
-      'Asks countless questions and speaks in full sentences',
-      'Draws circles/squares and handles child safety scissors',
+      'Asks curious questions and speaks very fluently',
+      'Draws circles/squares and handles safety scissors',
       'Identifies alphabets and associates numbers with quantities',
-      'Cooperates with friends and follows classroom tasks'
+      'Cooperates with friends and follows classroom routines'
     ],
     curriculum: [
       'English phonics, tracing, and pre-reading skills',
-      'Math readiness: counting up to 20, basic patterns',
+      'Math readiness: counting to 50, basic addition patterns',
       'General awareness: environment, animals, community helpers',
-      'Vocal performance, dramatic role-play, and gardening'
+      'Vocal performance, dramatic role-play, and team games'
     ],
     routine: [
       { time: '09:00 AM', act: 'Pledge, Assembly & Theme Discussion' },
@@ -183,20 +183,20 @@ const milestoneData = {
       { time: '03:15 PM', act: 'Reflection & Warm Dismissal' }
     ]
   },
-  kindergarten: {
-    ageGroup: 'Kindergarten Wing',
-    ageRange: '4.5 to 6.0 Years',
+  ukg: {
+    ageGroup: 'Upper Kindergarten',
+    ageRange: '5.0 to 6.0 Years',
     milestones: [
-      'Reads simple words and writes complete letters/digits',
-      'Skips, hops, and maintains advanced balance',
+      'Reads simple words and writes complete sentences/digits',
+      'Skips, hops, and maintains advanced physical balance',
       'Understands sequence, time concepts, and basic logic',
       'Demonstrates leadership, empathy, and solves tiny conflicts'
     ],
     curriculum: [
-      'Sight words reading, handwriting, and short sentences',
-      'Basic addition, subtraction, and sorting patterns',
+      'Sight words reading, fluent writing, and creative speech',
+      'Addition, subtraction, and advanced math sorting patterns',
       'EVS: Solar system, plants, water cycle, and human body',
-      'Introductory computer games and kids coding blocks'
+      'Introductory computer games and logic building blocks'
     ],
     routine: [
       { time: '09:00 AM', act: 'General Assembly & News Sharing' },
@@ -373,10 +373,10 @@ function initContactForm() {
 
       // Map child's age to standard friendly text
       const ageLabels = {
-        toddler: '1.5 to 2.5 years (Toddlers Wing)',
-        playgroup: '2.5 to 3.5 years (Playgroup Wing)',
-        nursery: '3.5 to 4.5 years (Nursery Wing)',
-        kindergarten: '4.5 to 6.0 years (Kindergarten Wing)'
+        toddler: '1.5 to 3.0 years (Toddlers Wing)',
+        nursery: '3.0 to 4.0 years (Nursery Wing)',
+        lkg: '4.0 to 5.0 years (Lower Kindergarten)',
+        ukg: '5.0 to 6.0 years (Upper Kindergarten)'
       };
       const childAgeText = ageLabels[childAge] || childAge;
 
