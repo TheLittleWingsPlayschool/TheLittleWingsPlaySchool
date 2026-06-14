@@ -383,25 +383,62 @@ function initContactForm() {
       };
       const childAgeText = ageLabels[childAge] || childAge;
 
+      // Generate Enquiry ID
+      const rand = Math.floor(1000 + Math.random() * 9000);
+      const enqId = `LW-2026-${rand}`;
+
+      // Payload for Google Sheets
+      const payload = {
+        enquiryId: enqId,
+        type: 'Campus Visit Request',
+        parentName: parentName,
+        phone: phone,
+        childName: studentName,
+        childAge: childAgeText,
+        program: childAgeText
+      };
+
+      // Show sending feedback
+      showFeedback('Saving details & connecting to WhatsApp... 🚀', 'success');
+
+      // Send to Google Sheets Webhook in background
+      const webhookUrl = "https://script.google.com/macros/s/AKfycbxiQRhBS2mU2Jmzgyhw7ktInBblJzIOiJt8AUoTaGD_3pGVrV49SkeVLIvPbnTQXthh/exec";
+      
+      fetch(webhookUrl, {
+        method: 'POST',
+        mode: 'no-cors', // Avoid CORS preflight blocks
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      })
+      .then(() => {
+        console.log("Synced to Google Sheets successfully!");
+      })
+      .catch((err) => {
+        console.error("Sheets sync error:", err);
+      });
+
       // Format WhatsApp Message using professional layout
       const waMessage = 
-        `Hello The Little Wings Play School! 🎈\n` +
+        `🎈 *Little Wings Visit Request* 🎈\n` +
+        `---------------------------------\n` +
+        `*Enquiry ID*: ${enqId}\n` +
         `I would like to schedule a campus visit and enquire about admissions.\n\n` +
         `*Parent Name*: ${parentName}\n` +
         `*Student Name*: ${studentName}\n` +
         `*Child's Age*: ${childAgeText}\n` +
-        `*Phone*: ${phone}`;
-
-      // Show instant feedback
-      showFeedback('Connecting to WhatsApp... 🚀', 'success');
+        `*Phone*: ${phone}\n` +
+        `---------------------------------\n` +
+        `Please confirm my visit. Thank you!`;
 
       // Open WhatsApp after a short delay so the user understands what is happening
       setTimeout(() => {
         const waUrl = `https://wa.me/917995554105?text=${encodeURIComponent(waMessage)}`;
         window.open(waUrl, '_blank');
-        showFeedback('WhatsApp opened! Please click "Send" in the WhatsApp chat to submit your enquiry. 📲', 'success');
+        showFeedback(`Request saved! Enquiry ID: ${enqId}. WhatsApp opened. 📲`, 'success');
         form.reset();
-      }, 1000);
+      }, 1200);
     });
   }
 

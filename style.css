@@ -497,6 +497,26 @@ nav ul li a:hover::after {
   overflow: hidden;
 }
 
+.admissions-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.6rem;
+  background-color: var(--primary-coral-light);
+  color: var(--primary-coral);
+  padding: 0.6rem 1.2rem;
+  border-radius: 50px;
+  font-weight: 700;
+  font-family: var(--font-heading);
+  font-size: 0.95rem;
+  margin-bottom: 1.5rem;
+  border: 2px dashed rgba(242, 108, 79, 0.3);
+  box-shadow: 0 4px 10px rgba(242, 108, 79, 0.08);
+}
+
+.admissions-badge i {
+  font-size: 1.1rem;
+}
+
 .hero-grid {
   display: grid;
   grid-template-columns: 1.1fr 0.9fr;
