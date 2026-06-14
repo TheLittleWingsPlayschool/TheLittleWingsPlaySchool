@@ -223,60 +223,86 @@ function initMilestoneFinder() {
   const ageRangeText = document.getElementById('milestone-age-range');
   const groupText = document.getElementById('milestone-group-title');
 
-  ageBtns.forEach(btn => {
+  let activeIndex = 0;
+  let autoplayTimer;
+
+  const startAutoplay = () => {
+    autoplayTimer = setInterval(() => {
+      activeIndex = (activeIndex + 1) % ageBtns.length;
+      switchTab(activeIndex);
+    }, 2000);
+  };
+
+  const resetAutoplay = () => {
+    clearInterval(autoplayTimer);
+    startAutoplay();
+  };
+
+  const switchTab = (index) => {
+    const btn = ageBtns[index];
+    
+    // Toggle active classes
+    ageBtns.forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+
+    const dataKey = btn.dataset.age;
+    const data = milestoneData[dataKey];
+
+    if (data) {
+      // Fade out animation transition
+      const contentBox = document.querySelector('.milestone-content-box');
+      contentBox.style.opacity = '0';
+      contentBox.style.transform = 'translateY(10px)';
+
+      setTimeout(() => {
+        // Update texts
+        groupText.textContent = data.ageGroup;
+        ageRangeText.textContent = `Target Age: ${data.ageRange}`;
+
+        // Update Milestones & Curriculum
+        let milestonesHtml = `
+          <h4><span>👶</span> Core Milestones</h4>
+          <ul>
+            ${data.milestones.map(m => `<li>${m}</li>`).join('')}
+          </ul>
+          <h4 style="margin-top: 1.5rem; color: var(--primary-coral);"><span>🎨</span> Program Focus</h4>
+          <ul>
+            ${data.curriculum.map(c => `<li>${c}</li>`).join('')}
+          </ul>
+        `;
+        detailsBox.innerHTML = milestonesHtml;
+
+        // Update Routine Timeline
+        let routineHtml = `
+          <h4><span>⏰</span> Sample Daily Routine</h4>
+          <div class="routine-timeline">
+            ${data.routine.map(r => `
+              <div class="routine-item">
+                <div class="routine-time">${r.time}</div>
+                <div class="routine-activity">${r.act}</div>
+              </div>
+            `).join('')}
+          </div>
+        `;
+        routineBox.innerHTML = routineHtml;
+
+        // Fade back in
+        contentBox.style.opacity = '1';
+        contentBox.style.transform = 'translateY(0)';
+      }, 300);
+    }
+  };
+
+  ageBtns.forEach((btn, index) => {
     btn.addEventListener('click', () => {
-      // Toggle active classes
-      ageBtns.forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-
-      const dataKey = btn.dataset.age;
-      const data = milestoneData[dataKey];
-
-      if (data) {
-        // Fade out animation transition
-        const contentBox = document.querySelector('.milestone-content-box');
-        contentBox.style.opacity = '0';
-        contentBox.style.transform = 'translateY(10px)';
-
-        setTimeout(() => {
-          // Update texts
-          groupText.textContent = data.ageGroup;
-          ageRangeText.textContent = `Target Age: ${data.ageRange}`;
-
-          // Update Milestones & Curriculum
-          let milestonesHtml = `
-            <h4><span>👶</span> Core Milestones</h4>
-            <ul>
-              ${data.milestones.map(m => `<li>${m}</li>`).join('')}
-            </ul>
-            <h4 style="margin-top: 1.5rem; color: var(--primary-coral);"><span>🎨</span> Program Focus</h4>
-            <ul>
-              ${data.curriculum.map(c => `<li>${c}</li>`).join('')}
-            </ul>
-          `;
-          detailsBox.innerHTML = milestonesHtml;
-
-          // Update Routine Timeline
-          let routineHtml = `
-            <h4><span>⏰</span> Sample Daily Routine</h4>
-            <div class="routine-timeline">
-              ${data.routine.map(r => `
-                <div class="routine-item">
-                  <div class="routine-time">${r.time}</div>
-                  <div class="routine-activity">${r.act}</div>
-                </div>
-              `).join('')}
-            </div>
-          `;
-          routineBox.innerHTML = routineHtml;
-
-          // Fade back in
-          contentBox.style.opacity = '1';
-          contentBox.style.transform = 'translateY(0)';
-        }, 300);
-      }
+      activeIndex = index;
+      switchTab(index);
+      resetAutoplay(); // Reset timer on manual click
     });
   });
+
+  // Start the 2s autoplay initially
+  startAutoplay();
 }
 
 /* ==========================================
