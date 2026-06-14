@@ -224,17 +224,35 @@ function initMilestoneFinder() {
   const groupText = document.getElementById('milestone-group-title');
 
   let activeIndex = 0;
-  let autoplayTimer;
+  let progressInterval;
+  let progress = 0;
+  const progressLine = document.getElementById('milestone-progress-line');
 
   const startAutoplay = () => {
-    autoplayTimer = setInterval(() => {
-      activeIndex = (activeIndex + 1) % ageBtns.length;
-      switchTab(activeIndex);
-    }, 2000);
+    progress = 0;
+    if (progressLine) progressLine.style.width = '0%';
+    
+    // Clear any existing intervals
+    clearInterval(progressInterval);
+
+    const tickRate = 30; // 30ms for smooth transitions
+    const totalDuration = 3000; // 3 seconds (3000ms)
+
+    progressInterval = setInterval(() => {
+      progress += (tickRate / totalDuration) * 100;
+      if (progress >= 100) {
+        progress = 0;
+        if (progressLine) progressLine.style.width = '0%';
+        activeIndex = (activeIndex + 1) % ageBtns.length;
+        switchTab(activeIndex);
+      } else {
+        if (progressLine) progressLine.style.width = `${progress}%`;
+      }
+    }, tickRate);
   };
 
   const resetAutoplay = () => {
-    clearInterval(autoplayTimer);
+    clearInterval(progressInterval);
     startAutoplay();
   };
 
@@ -301,7 +319,7 @@ function initMilestoneFinder() {
     });
   });
 
-  // Start the 2s autoplay initially
+  // Start the 3s autoplay and progress line initially
   startAutoplay();
 }
 
