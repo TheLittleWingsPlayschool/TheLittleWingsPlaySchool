@@ -652,6 +652,71 @@
     </div>
   </div>
 
+  <!-- Floating Call Button -->
+  <button id="ai-call-btn" class="ai-call-float" aria-label="Call AI Receptionist">
+    <span class="call-tooltip">Call AI Receptionist 🤖</span>
+    <i class="fa-solid fa-phone"></i>
+    <span class="pulse-ring"></span>
+  </button>
+
+  <!-- AI Receptionist Call Modal -->
+  <div id="ai-call-modal" class="ai-modal-overlay">
+    <div class="ai-call-card">
+      <div class="ai-call-header">
+        <div class="ai-avatar-container">
+          <div class="ai-avatar-pulse"></div>
+          <img src="assets/logo.jpeg" alt="AI Mia" class="ai-avatar-img">
+        </div>
+        <h3 class="ai-name">Mia</h3>
+        <p class="ai-role">AI Receptionist</p>
+        <div id="call-status" class="call-status">Connecting...</div>
+        <div id="call-timer" class="call-timer">00:00</div>
+        
+        <!-- Language Selector Pill -->
+        <div class="ai-lang-pill">
+          <button id="lang-btn-en" class="lang-pill-btn active">English</button>
+          <button id="lang-btn-te" class="lang-pill-btn">తెలుగు</button>
+        </div>
+      </div>
+
+      <div class="ai-call-body" style="width: 100%;">
+        <!-- Visual Sound Wave Animation -->
+        <div class="sound-wave" id="sound-wave">
+          <span class="stroke"></span>
+          <span class="stroke"></span>
+          <span class="stroke"></span>
+          <span class="stroke"></span>
+          <span class="stroke"></span>
+          <span class="stroke"></span>
+          <span class="stroke"></span>
+        </div>
+
+        <!-- Conversation Display -->
+        <div class="ai-conversation-log" id="ai-conversation-log">
+          <!-- Live chat messages will be appended here -->
+        </div>
+
+        <!-- Simulated text input for accessibility -->
+        <div class="ai-input-group">
+          <input type="text" id="ai-text-input" placeholder="Type your answer here..." aria-label="Type response">
+          <button id="ai-send-btn" aria-label="Send response"><i class="fa-solid fa-paper-plane"></i></button>
+        </div>
+      </div>
+
+      <div class="ai-call-footer">
+        <button id="call-mute-btn" class="call-action-btn" title="Mute Microphone">
+          <i class="fa-solid fa-microphone"></i>
+        </button>
+        <button id="call-end-btn" class="call-action-btn end-call" title="End Call">
+          <i class="fa-solid fa-phone-slash"></i>
+        </button>
+        <button id="call-speaker-btn" class="call-action-btn active" title="Toggle AI Voice">
+          <i class="fa-solid fa-volume-high"></i>
+        </button>
+      </div>
+    </div>
+  </div>
+
   <!-- Floating Back to Top Button -->
   <button class="back-to-top" aria-label="Back to Top"><i class="fa-solid fa-arrow-up"></i></button>
 

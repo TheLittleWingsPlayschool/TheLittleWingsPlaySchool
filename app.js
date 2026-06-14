@@ -10,6 +10,7 @@ document.addEventListener('DOMContentLoaded', () => {
   initContactForm();
   initScrollEffects();
   initDraggableLogo();
+  initAiCallWidget();
 });
 
 /* ==========================================
@@ -606,4 +607,530 @@ function initDraggableLogo() {
   logo.addEventListener('touchstart', dragStart, { passive: false });
   document.addEventListener('touchmove', dragMove, { passive: false });
   document.addEventListener('touchend', dragEnd);
+}
+
+/* ==========================================
+   7. AI RECEPTIONIST INTERACTIVE CALL WIDGET
+   ========================================== */
+function initAiCallWidget() {
+  const callBtn = document.getElementById('ai-call-btn');
+  const modal = document.getElementById('ai-call-modal');
+  const endBtn = document.getElementById('call-end-btn');
+  const muteBtn = document.getElementById('call-mute-btn');
+  const speakerBtn = document.getElementById('call-speaker-btn');
+  const soundWave = document.getElementById('sound-wave');
+  const conversationLog = document.getElementById('ai-conversation-log');
+  const textInput = document.getElementById('ai-text-input');
+  const sendBtn = document.getElementById('ai-send-btn');
+  const callStatus = document.getElementById('call-status');
+  const callTimer = document.getElementById('call-timer');
+  const langBtnEn = document.getElementById('lang-btn-en');
+  const langBtnTe = document.getElementById('lang-btn-te');
+
+  if (!callBtn || !modal) return;
+
+  let isCallActive = false;
+  let isMuted = false;
+  let isSpeakerOn = true;
+  let timerInterval = null;
+  let secondsElapsed = 0;
+  
+  let currentLanguage = 'en'; 
+  let currentConversationState = 0;
+  let leadData = { parentName: '', childWing: '', phone: '' };
+  
+  let activeUtterance = null; // Prevent Chrome garbage-collection bugs with Web Speech API
+  let wrapUpTimeout = null;  // Reference to clear final wrap-up timers
+
+  const voiceScripts = {
+    en: {
+      state0: "Hello! Welcome to The Little Wings Play School. I'm Mia, your interactive AI receptionist. I can help you register for a school visit. May I please know your name?",
+      state1: (name) => `Nice to meet you, ${name}! What program or age group are you looking for? We offer Toddlers Wing, Nursery, Lower Kindergarten, and Upper Kindergarten.`,
+      state2: (wing) => `Excellent choice! Our ${wing} is a highly designed, premium environment. To complete your campus visit request, what is your WhatsApp mobile number?`,
+      state3: (name) => `Thank you, ${name}! I have successfully captured your visit request. I will now open WhatsApp to complete your booking with our team. Have a magical day!`,
+      retryPhone: "Please provide a valid 10-digit mobile number so we can contact you.",
+      statusConnecting: "Connecting...",
+      statusConnected: "Connected",
+      statusListening: "Listening...",
+      statusSpeaking: "Mia is speaking...",
+      statusMuted: "Muted",
+      statusCompleted: "Call completed!",
+      alertWhatsApp: "Would you like to send the captured visit details to the school WhatsApp?"
+    },
+    te: {
+      state0: "నమస్తే! ద లిటిల్ వింగ్స్ ప్లే స్కూల్‌కు స్వాగతం. నేను మీ ఏఐ రిసెప్షనిస్ట్ మియాను. స్కూల్ సందర్శనను బుక్ చేసుకోవడానికి నేను మీకు సహాయం చేస్తాను. దయచేసి మీ పేరు చెప్పండి?",
+      state1: (name) => `మిమ్మల్ని కలవడం చాలా సంతోషంగా ఉంది, ${name} గారు! మీ బాబు లేదా పాప వయస్సు ఎంత, లేదా ఏ క్లాస్ కోసం చూస్తున్నారు? మా దగ్గర టాడ్లర్స్ వింగ్, నర్సరీ, లోయర్ కేజీ మరియు అప్పర్ కేజీ ఉన్నాయి.`,
+      state2: (wing) => `చాలా మంచిది! మా దగ్గర చాలా ఉత్తమమైన వాతావరణం ఉంది. మీ సందర్శనను బుక్ చేయడానికి, దయచేసి మీ వాట్సాప్ మొబైల్ నంబర్ చెప్పండి?`,
+      state3: (name) => `ధన్యవాదాలు, ${name} గారు! మీ వివరాలు నమోదయ్యాయి. బుకింగ్ పూర్తి చేయడానికి నేను ఇప్పుడు వాట్సాప్ ఓపెన్ చేస్తున్నాను. మీకు మంచి రోజు అవ్వాలని కోరుకుంటున్నాను!`,
+      retryPhone: "దయచేసి మీ సరైన 10-అంకెల మొబైల్ నంబర్‌ను చెప్పండి, తద్వారా మేము మిమ్మల్ని సంప్రదించగలము.",
+      statusConnecting: "కనెక్ట్ అవుతోంది...",
+      statusConnected: "కనెక్ట్ అయింది",
+      statusListening: "వింటోంది...",
+      statusSpeaking: "మియా మాట్లాడుతోంది...",
+      statusMuted: "మ్యూట్ చేయబడింది",
+      statusCompleted: "కాల్ పూర్తయింది!",
+      alertWhatsApp: "నమోదు చేసిన సందర్శన వివరాలను స్కూల్ వాట్సాప్‌కు పంపాలనుకుంటున్నారా?"
+    }
+  };
+
+  // TTS Setup
+  let femaleVoiceEn = null;
+  let femaleVoiceTe = null;
+  
+  const setupVoice = () => {
+    if ('speechSynthesis' in window) {
+      const loadVoices = () => {
+        const voices = window.speechSynthesis.getVoices();
+        femaleVoiceEn = voices.find(v => 
+          (v.name.includes('Google') || v.name.includes('Natural') || v.name.includes('Zira') || v.name.includes('Hazel') || v.name.includes('Female')) && 
+          v.lang.startsWith('en')
+        ) || voices.find(v => v.lang.startsWith('en'));
+        
+        femaleVoiceTe = voices.find(v => 
+          v.lang.startsWith('te') || v.lang.includes('Telugu')
+        ) || femaleVoiceEn;
+      };
+      loadVoices();
+      if (window.speechSynthesis.onvoiceschanged !== undefined) {
+        window.speechSynthesis.onvoiceschanged = loadVoices;
+      }
+    }
+  };
+  setupVoice();
+
+  // TTS Speak
+  const speak = (text) => {
+    if (!isSpeakerOn) {
+      soundWave.classList.remove('active');
+      if (isCallActive && currentConversationState < 4) {
+        callStatus.textContent = voiceScripts[currentLanguage].statusListening;
+        startListening();
+      }
+      return;
+    }
+
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+      const utterance = new SpeechSynthesisUtterance(text);
+      activeUtterance = utterance; // Keep a reference to prevent garbage collection
+      
+      if (currentLanguage === 'te') {
+        utterance.voice = femaleVoiceTe;
+        utterance.lang = 'te-IN';
+      } else {
+        utterance.voice = femaleVoiceEn;
+        utterance.lang = 'en-IN';
+      }
+      
+      utterance.rate = currentLanguage === 'te' ? 0.90 : 0.95;
+      utterance.pitch = 1.05;
+      
+      utterance.onstart = () => {
+        soundWave.classList.add('active');
+        callStatus.textContent = voiceScripts[currentLanguage].statusSpeaking;
+      };
+
+      utterance.onend = () => {
+        soundWave.classList.remove('active');
+        if (isCallActive && currentConversationState < 4) {
+          callStatus.textContent = voiceScripts[currentLanguage].statusListening;
+          startListening();
+        } else if (currentConversationState === 4) {
+          callStatus.textContent = voiceScripts[currentLanguage].statusCompleted;
+          // Clear any pending safety timeout
+          if (wrapUpTimeout) {
+            clearTimeout(wrapUpTimeout);
+            wrapUpTimeout = null;
+          }
+          // Wrap up call 1.5 seconds after final speech ends
+          wrapUpTimeout = setTimeout(() => {
+            if (isCallActive) {
+              endCall(true);
+            }
+          }, 1500);
+        }
+      };
+
+      utterance.onerror = (e) => {
+        console.error("Speech Synthesis Error:", e);
+        soundWave.classList.remove('active');
+        if (isCallActive) {
+          if (currentConversationState === 4) {
+            endCall(true);
+          } else {
+            callStatus.textContent = voiceScripts[currentLanguage].statusListening;
+            startListening();
+          }
+        }
+      };
+
+      window.speechSynthesis.speak(utterance);
+    } else {
+      if (isCallActive) {
+        if (currentConversationState === 4) {
+          endCall(true);
+        } else {
+          callStatus.textContent = voiceScripts[currentLanguage].statusListening;
+          startListening();
+        }
+      }
+    }
+  };
+
+  // Speech Recognition
+  let recognition = null;
+  if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+    const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+    recognition = new SpeechRec();
+    recognition.continuous = false;
+    recognition.interimResults = false;
+    
+    recognition.onstart = () => {
+      if (isMuted || !isCallActive) {
+        recognition.stop();
+        return;
+      }
+      soundWave.classList.add('active');
+      callStatus.textContent = voiceScripts[currentLanguage].statusListening;
+    };
+
+    recognition.onresult = (event) => {
+      const speechToText = event.results[0][0].transcript;
+      addChatMessage(speechToText, 'user');
+      processUserResponse(speechToText);
+    };
+
+    recognition.onerror = (event) => {
+      console.warn('Speech recognition error:', event.error);
+      soundWave.classList.remove('active');
+    };
+
+    recognition.onend = () => {
+      soundWave.classList.remove('active');
+      if (isCallActive && callStatus.textContent === voiceScripts[currentLanguage].statusListening) {
+        callStatus.textContent = voiceScripts[currentLanguage].statusConnected;
+      }
+    };
+  }
+
+  const startListening = () => {
+    if (recognition && !isMuted && isCallActive) {
+      recognition.lang = currentLanguage === 'en' ? 'en-IN' : 'te-IN';
+      try {
+        recognition.start();
+      } catch (e) {
+        // Already running
+      }
+    }
+  };
+
+  const stopListening = () => {
+    if (recognition) {
+      try {
+        recognition.stop();
+      } catch (e) {
+        // Ignore
+      }
+    }
+  };
+
+  const addChatMessage = (text, sender) => {
+    const bubble = document.createElement('div');
+    bubble.classList.add('chat-bubble', sender);
+    bubble.textContent = text;
+    conversationLog.appendChild(bubble);
+    conversationLog.scrollTop = conversationLog.scrollHeight;
+  };
+
+  const startTimer = () => {
+    secondsElapsed = 0;
+    timerInterval = setInterval(() => {
+      secondsElapsed++;
+      const mins = Math.floor(secondsElapsed / 60).toString().padStart(2, '0');
+      const secs = (secondsElapsed % 60).toString().padStart(2, '0');
+      callTimer.textContent = `${mins}:${secs}`;
+    }, 1000);
+  };
+
+  const stopTimer = () => {
+    if (timerInterval) {
+      clearInterval(timerInterval);
+      timerInterval = null;
+    }
+    callTimer.textContent = '00:00';
+  };
+
+  const startCall = () => {
+    if (isCallActive) return;
+    isCallActive = true;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+    
+    currentLanguage = 'en';
+    langBtnEn.classList.add('active');
+    langBtnTe.classList.remove('active');
+    
+    callStatus.textContent = voiceScripts[currentLanguage].statusConnecting;
+    conversationLog.innerHTML = '';
+    leadData = { parentName: '', childWing: '', phone: '' };
+    currentConversationState = 0;
+    
+    isMuted = false;
+    muteBtn.classList.remove('active');
+    isSpeakerOn = true;
+    speakerBtn.classList.add('active');
+
+    setTimeout(() => {
+      callStatus.textContent = voiceScripts[currentLanguage].statusConnected;
+      startTimer();
+      triggerConversationState();
+    }, 1200);
+  };
+
+  const endCall = (isAutomatic = false) => {
+    if (!isCallActive) return;
+    isCallActive = false;
+    stopTimer();
+    stopListening();
+    
+    if (wrapUpTimeout) {
+      clearTimeout(wrapUpTimeout);
+      wrapUpTimeout = null;
+    }
+    
+    if ('speechSynthesis' in window) {
+      window.speechSynthesis.cancel();
+    }
+    
+    modal.classList.remove('active');
+    document.body.style.overflow = '';
+    soundWave.classList.remove('active');
+
+    if ((leadData.parentName || leadData.phone) && isAutomatic) {
+      sendWhatsAppLead();
+    } else if (leadData.parentName || leadData.phone) {
+      if (confirm(voiceScripts[currentLanguage].alertWhatsApp)) {
+        sendWhatsAppLead();
+      }
+    }
+  };
+
+  const sendWhatsAppLead = () => {
+    const parent = leadData.parentName || 'Parent';
+    const wing = leadData.childWing || 'Not Specified';
+    const phoneNum = leadData.phone || 'Not Specified';
+
+    const rand = Math.floor(1000 + Math.random() * 9000);
+    const enqId = `LW-VOICE-${rand}`;
+
+    // Payload for Google Sheets Webhook
+    const payload = {
+      enquiryId: enqId,
+      type: 'AI Call Lead',
+      parentName: parent,
+      phone: phoneNum,
+      childName: '',
+      childAge: wing,
+      program: wing,
+      comments: 'Captured via AI Voice Receptionist'
+    };
+
+    // Send to Google Sheets Webhook
+    const webhookUrl = "https://script.google.com/macros/s/AKfycbxiQRhBS2mU2Jmzgyhw7ktInBblJzIOiJt8AUoTaGD_3pGVrV49SkeVLIvPbnTQXthh/exec";
+    
+    fetch(webhookUrl, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify(payload)
+    })
+    .then(() => {
+      console.log("Call Lead Synced successfully!");
+    })
+    .catch((err) => {
+      console.error("Call Lead Sync error:", err);
+    });
+
+    // Send WhatsApp message to 7995554105
+    const waMessage = 
+      `🤖 *Lead Captured by AI Receptionist Mia* 🎈\n` +
+      `---------------------------------\n` +
+      `*Enquiry ID*: ${enqId}\n` +
+      `I just spoke to Mia on the website and would like to confirm my school visit!\n\n` +
+      `*Parent Name*: ${parent}\n` +
+      `*Child's Wing*: ${wing}\n` +
+      `*WhatsApp Phone*: ${phoneNum}\n` +
+      `---------------------------------\n` +
+      `Please confirm my visit date and time. Thank you!`;
+
+    const waUrl = `https://wa.me/917995554105?text=${encodeURIComponent(waMessage)}`;
+    window.open(waUrl, '_blank');
+  };
+
+  const triggerConversationState = () => {
+    let responseText = '';
+    const script = voiceScripts[currentLanguage];
+    
+    switch (currentConversationState) {
+      case 0:
+        responseText = script.state0;
+        addChatMessage(responseText, 'ai');
+        speak(responseText);
+        break;
+
+      case 1:
+        responseText = script.state1(leadData.parentName);
+        addChatMessage(responseText, 'ai');
+        speak(responseText);
+        break;
+
+      case 2:
+        responseText = script.state2(leadData.childWing);
+        addChatMessage(responseText, 'ai');
+        speak(responseText);
+        break;
+
+      case 3:
+        responseText = script.state3(leadData.parentName);
+        addChatMessage(responseText, 'ai');
+        speak(responseText);
+        currentConversationState = 4;
+        
+        // Safety fallback timeout: wait 12s if speaking, or 3s if speaker is off
+        if (wrapUpTimeout) {
+          clearTimeout(wrapUpTimeout);
+        }
+        wrapUpTimeout = setTimeout(() => {
+          if (isCallActive) {
+            endCall(true);
+          }
+        }, isSpeakerOn ? 12000 : 3000);
+        break;
+    }
+  };
+
+  const processUserResponse = (text) => {
+    text = text.trim();
+    if (!text) return;
+
+    stopListening();
+
+    switch (currentConversationState) {
+      case 0:
+        leadData.parentName = text;
+        currentConversationState = 1;
+        setTimeout(triggerConversationState, 600);
+        break;
+
+      case 1:
+        const lowerText = text.toLowerCase();
+        if (lowerText.includes('toddler') || lowerText.includes('టాడ్లర్')) {
+          leadData.childWing = 'Toddlers Wing (1.5 - 3.0 Years)';
+        } else if (lowerText.includes('nursery') || lowerText.includes('నర్సరీ')) {
+          leadData.childWing = 'Nursery Wing (3.0 - 4.0 Years)';
+        } else if (lowerText.includes('lower') || lowerText.includes('lkg') || lowerText.includes('l.k.g') || lowerText.includes('లోయర్')) {
+          leadData.childWing = 'Lower Kindergarten (4.0 - 5.0 Years)';
+        } else if (lowerText.includes('upper') || lowerText.includes('ukg') || lowerText.includes('u.k.g') || lowerText.includes('అప్పర్') || lowerText.includes('kindergarten')) {
+          leadData.childWing = 'Upper Kindergarten (5.0 - 6.0 Years)';
+        } else {
+          leadData.childWing = text;
+        }
+        
+        currentConversationState = 2;
+        setTimeout(triggerConversationState, 600);
+        break;
+
+      case 2:
+        const digits = text.replace(/\D/g, '');
+        if (digits.length >= 10) {
+          leadData.phone = digits;
+          currentConversationState = 3;
+          setTimeout(triggerConversationState, 600);
+        } else {
+          const retryMessage = voiceScripts[currentLanguage].retryPhone;
+          addChatMessage(retryMessage, 'ai');
+          speak(retryMessage);
+        }
+        break;
+    }
+  };
+
+  const handleTextInput = () => {
+    const text = textInput.value.trim();
+    if (!text) return;
+
+    addChatMessage(text, 'user');
+    textInput.value = '';
+    processUserResponse(text);
+  };
+
+  const changeLanguage = (lang) => {
+    if (currentLanguage === lang) return;
+    currentLanguage = lang;
+    
+    if (lang === 'en') {
+      langBtnEn.classList.add('active');
+      langBtnTe.classList.remove('active');
+    } else {
+      langBtnTe.classList.add('active');
+      langBtnEn.classList.remove('active');
+    }
+    
+    if (recognition) {
+      recognition.lang = lang === 'en' ? 'en-IN' : 'te-IN';
+    }
+    
+    if (isCallActive) {
+      triggerConversationState();
+    }
+  };
+
+  langBtnEn.addEventListener('click', () => changeLanguage('en'));
+  langBtnTe.addEventListener('click', () => changeLanguage('te'));
+
+  callBtn.addEventListener('click', startCall);
+  endBtn.addEventListener('click', () => endCall(false));
+  
+  muteBtn.addEventListener('click', () => {
+    isMuted = !isMuted;
+    muteBtn.classList.toggle('active', isMuted);
+    if (isMuted) {
+      stopListening();
+      callStatus.textContent = voiceScripts[currentLanguage].statusMuted;
+      soundWave.classList.remove('active');
+    } else {
+      callStatus.textContent = voiceScripts[currentLanguage].statusListening;
+      startListening();
+    }
+  });
+
+  speakerBtn.addEventListener('click', () => {
+    isSpeakerOn = !isSpeakerOn;
+    speakerBtn.classList.toggle('active', isSpeakerOn);
+    if (!isSpeakerOn) {
+      if ('speechSynthesis' in window) {
+        window.speechSynthesis.cancel();
+      }
+      soundWave.classList.remove('active');
+    } else {
+      if (callStatus.textContent === voiceScripts[currentLanguage].statusSpeaking) {
+        soundWave.classList.add('active');
+      }
+    }
+  });
+
+  sendBtn.addEventListener('click', handleTextInput);
+  textInput.addEventListener('keypress', (e) => {
+    if (e.key === 'Enter') {
+      handleTextInput();
+    }
+  });
+
+  modal.addEventListener('click', (e) => {
+    if (e.target === modal) {
+      endCall(false);
+    }
+  });
 }
