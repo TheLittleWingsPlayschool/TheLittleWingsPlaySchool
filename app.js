@@ -572,36 +572,59 @@ function initAiCallWidget() {
   
   let currentLanguage = 'en'; 
   let currentConversationState = 0;
-  let leadData = { parentName: '', childWing: '', phone: '' };
+  let leadData = { parentName: '', phone: '', studentName: '', childAge: '', program: '', city: '' };
   
   let activeUtterance = null; // Prevent Chrome garbage-collection bugs with Web Speech API
   let wrapUpTimeout = null;  // Reference to clear final wrap-up timers
 
+  const getSpeakableProgram = (prog, lang) => {
+    const p = prog.toLowerCase();
+    if (p.includes('toddler')) {
+      return lang === 'te' ? 'టాడ్లర్స్ వింగ్ ఒకటి నుండి మూడు సంవత్సరాలు' : 'Toddlers Wing for one to three years';
+    }
+    if (p.includes('nursery')) {
+      return lang === 'te' ? 'నర్సరీ వింగ్ మూడు నుండి నాలుగు సంవత్సరాలు' : 'Nursery Wing for three to four years';
+    }
+    if (p.includes('lower') || p.includes('lkg')) {
+      return lang === 'te' ? 'లోయర్ కేజీ నాలుగు నుండి ఐదు సంవత్సరాలు' : 'Lower Kindergarten for four to five years';
+    }
+    if (p.includes('upper') || p.includes('ukg')) {
+      return lang === 'te' ? 'అప్పర్ కేజీ ఐదు నుండి ఆరు సంవత్సరాలు' : 'Upper Kindergarten for five to six years';
+    }
+    return prog;
+  };
+
   const voiceScripts = {
     en: {
-      state0: "Hello! Welcome to The Little Wings Play School. I'm Mia, your interactive AI receptionist. I can help you register for a school visit. May I please know your name?",
-      state1: (name) => `Nice to meet you, ${name}! What program or age group are you looking for? We offer Toddlers Wing, Nursery, Lower Kindergarten, and Upper Kindergarten.`,
-      state2: (wing) => `Excellent choice! Our ${wing} is a highly designed, premium environment. To complete your campus visit request, what is your WhatsApp mobile number?`,
-      state3: (name) => `Thank you, ${name}! I have successfully captured your visit request. I will now open WhatsApp to complete your booking with our team. Have a magical day!`,
+      state0: "Hello! Welcome to The Little Wings Play School. I'm Aaliya, your interactive AI receptionist. I can help you register for a school visit. May I please know your name?",
+      state1: (parentName) => `Nice to meet you, ${parentName}! May I please have your WhatsApp mobile number?`,
+      state2: "Thank you! What is your child's name?",
+      state3: (studentName) => `Got it! How old is ${studentName}?`,
+      state4: (age) => `Understood. Which program are you interested in? We offer Toddlers Wing for children from one to three years, Nursery Wing for three to four years, Lower Kindergarten for four to five years, and Upper Kindergarten for five to six years.`,
+      state5: (program) => `Excellent choice! For our ${getSpeakableProgram(program, 'en')}, we have a very safe and premium setup. Which city or village are you calling from?`,
+      state6: (parentName) => `Thank you, ${parentName}! I have successfully registered your interest. Our team will get back to you very soon. Have a wonderful day!`,
       retryPhone: "Please provide a valid 10-digit mobile number so we can contact you.",
       statusConnecting: "Connecting...",
       statusConnected: "Connected",
       statusListening: "Listening...",
-      statusSpeaking: "Mia is speaking...",
+      statusSpeaking: "Aaliya is speaking...",
       statusMuted: "Muted",
       statusCompleted: "Call completed!",
       alertWhatsApp: "Would you like to send the captured visit details to the school WhatsApp?"
     },
     te: {
-      state0: "నమస్తే! ద లిటిల్ వింగ్స్ ప్లే స్కూల్‌కు స్వాగతం. నేను మీ ఏఐ రిసెప్షనిస్ట్ మియాను. స్కూల్ సందర్శనను బుక్ చేసుకోవడానికి నేను మీకు సహాయం చేస్తాను. దయచేసి మీ పేరు చెప్పండి?",
-      state1: (name) => `మిమ్మల్ని కలవడం చాలా సంతోషంగా ఉంది, ${name} గారు! మీ బాబు లేదా పాప వయస్సు ఎంత, లేదా ఏ క్లాస్ కోసం చూస్తున్నారు? మా దగ్గర టాడ్లర్స్ వింగ్, నర్సరీ, లోయర్ కేజీ మరియు అప్పర్ కేజీ ఉన్నాయి.`,
-      state2: (wing) => `చాలా మంచిది! మా దగ్గర చాలా ఉత్తమమైన వాతావరణం ఉంది. మీ సందర్శనను బుక్ చేయడానికి, దయచేసి మీ వాట్సాప్ మొబైల్ నంబర్ చెప్పండి?`,
-      state3: (name) => `ధన్యవాదాలు, ${name} గారు! మీ వివరాలు నమోదయ్యాయి. బుకింగ్ పూర్తి చేయడానికి నేను ఇప్పుడు వాట్సాప్ ఓపెన్ చేస్తున్నాను. మీకు మంచి రోజు అవ్వాలని కోరుకుంటున్నాను!`,
+      state0: "నమస్తే! ద లిటిల్ వింగ్స్ ప్లే స్కూల్‌కు స్వాగతం. నేను మీ ఏఐ రిసెప్షనిస్ట్ ఆల్యాను. స్కూల్ సందర్శనను బుక్ చేసుకోవడానికి నేను మీకు సహాయం చేస్తాను. దయచేసి మీ పేరు చెప్పండి?",
+      state1: (parentName) => `మిమ్మల్ని కలవడం చాలా సంతోషంగా ఉంది, ${parentName} గారు! దయచేసి మీ వాట్సాప్ మొబైల్ నంబర్ చెప్పండి?`,
+      state2: "ధన్యవాదాలు! మీ బాబు లేదా పాప పేరు ఏమిటి?",
+      state3: (studentName) => `చాలా మంచిది! ${studentName} వయస్సు ఎంత?`,
+      state4: (age) => `అలాగే. మీరు ఏ క్లాస్ లేదా ప్రోగ్రామ్ కోసం చూస్తున్నారు? మా దగ్గర ఒకటి నుండి మూడు సంవత్సరాల పిల్లలకు టాడ్లర్స్ వింగ్, మూడు నుండి నాలుగు సంవత్సరాల వారికి నర్సరీ వింగ్, నాలుగు నుండి ఐదు సంవత్సరాల వారికి లోయర్ కేజీ, మరియు ఐదు నుండి ఆరు సంవత్సరాల వారికి అప్పర్ కేజీ ఉన్నాయి.`,
+      state5: (program) => `చాలా మంచి ఎంపిక! ${getSpeakableProgram(program, 'te')} కోసం మా దగ్గర చాలా ఉత్తమమైన వాతావరణం ఉంది. మీరు ఏ ఊరు లేదా గ్రామం నుండి మాట్లాడుతున్నారు?`,
+      state6: (parentName) => `ధన్యవాదాలు, ${parentName} గారు! మీ వివరాలు నమోదయ్యాయి. మా టీమ్ త్వరలోనే మిమ్మల్ని సంప్రదిస్తారు. మీకు మంచి రోజు అవ్వాలని కోరుకుంటున్నాను!`,
       retryPhone: "దయచేసి మీ సరైన 10-అంకెల మొబైల్ నంబర్‌ను చెప్పండి, తద్వారా మేము మిమ్మల్ని సంప్రదించగలము.",
       statusConnecting: "కనెక్ట్ అవుతోంది...",
       statusConnected: "కనెక్ట్ అయింది",
       statusListening: "వింటోంది...",
-      statusSpeaking: "మియా మాట్లాడుతోంది...",
+      statusSpeaking: "ఆల్యా మాట్లాడుతోంది...",
       statusMuted: "మ్యూట్ చేయబడింది",
       statusCompleted: "కాల్ పూర్తయింది!",
       alertWhatsApp: "నమోదు చేసిన సందర్శన వివరాలను స్కూల్ వాట్సాప్‌కు పంపాలనుకుంటున్నారా?"
@@ -637,7 +660,7 @@ function initAiCallWidget() {
   const speak = (text) => {
     if (!isSpeakerOn) {
       soundWave.classList.remove('active');
-      if (isCallActive && currentConversationState < 4) {
+      if (isCallActive && currentConversationState < 7) {
         callStatus.textContent = voiceScripts[currentLanguage].statusListening;
         startListening();
       }
@@ -667,10 +690,10 @@ function initAiCallWidget() {
 
       utterance.onend = () => {
         soundWave.classList.remove('active');
-        if (isCallActive && currentConversationState < 4) {
+        if (isCallActive && currentConversationState < 7) {
           callStatus.textContent = voiceScripts[currentLanguage].statusListening;
           startListening();
-        } else if (currentConversationState === 4) {
+        } else if (currentConversationState === 7) {
           callStatus.textContent = voiceScripts[currentLanguage].statusCompleted;
           // Clear any pending safety timeout
           if (wrapUpTimeout) {
@@ -690,7 +713,7 @@ function initAiCallWidget() {
         console.error("Speech Synthesis Error:", e);
         soundWave.classList.remove('active');
         if (isCallActive) {
-          if (currentConversationState === 4) {
+          if (currentConversationState === 7) {
             endCall(true);
           } else {
             callStatus.textContent = voiceScripts[currentLanguage].statusListening;
@@ -702,7 +725,7 @@ function initAiCallWidget() {
       window.speechSynthesis.speak(utterance);
     } else {
       if (isCallActive) {
-        if (currentConversationState === 4) {
+        if (currentConversationState === 7) {
           endCall(true);
         } else {
           callStatus.textContent = voiceScripts[currentLanguage].statusListening;
@@ -807,7 +830,7 @@ function initAiCallWidget() {
     
     callStatus.textContent = voiceScripts[currentLanguage].statusConnecting;
     conversationLog.innerHTML = '';
-    leadData = { parentName: '', childWing: '', phone: '' };
+    leadData = { parentName: '', phone: '', studentName: '', childAge: '', program: '', city: '' };
     currentConversationState = 0;
     
     isMuted = false;
@@ -852,8 +875,11 @@ function initAiCallWidget() {
 
   const sendWhatsAppLead = () => {
     const parent = leadData.parentName || 'Parent';
-    const wing = leadData.childWing || 'Not Specified';
     const phoneNum = leadData.phone || 'Not Specified';
+    const student = leadData.studentName || 'Not Specified';
+    const age = leadData.childAge || 'Not Specified';
+    const prog = leadData.program || 'Not Specified';
+    const location = leadData.city || 'Not Specified';
 
     const rand = Math.floor(1000 + Math.random() * 9000);
     const enqId = `LW-VOICE-${rand}`;
@@ -864,10 +890,10 @@ function initAiCallWidget() {
       type: 'AI Call Lead',
       parentName: parent,
       phone: phoneNum,
-      childName: '',
-      childAge: wing,
-      program: wing,
-      comments: 'Captured via AI Voice Receptionist'
+      childName: student,
+      childAge: age,
+      program: prog,
+      comments: `Location: ${location} | Captured via AI Voice Receptionist Aaliya`
     };
 
     // Send to Google Sheets Webhook
@@ -890,15 +916,18 @@ function initAiCallWidget() {
 
     // Send WhatsApp message to 7995554105
     const waMessage = 
-      `🤖 *Lead Captured by AI Receptionist Mia* 🎈\n` +
+      `🤖 *Lead Captured by AI Receptionist Aaliya* 🎈\n` +
       `---------------------------------\n` +
       `*Enquiry ID*: ${enqId}\n` +
-      `I just spoke to Mia on the website and would like to confirm my school visit!\n\n` +
+      `I just spoke to Aaliya on the website and would like to confirm my school visit!\n\n` +
       `*Parent Name*: ${parent}\n` +
-      `*Child's Wing*: ${wing}\n` +
       `*WhatsApp Phone*: ${phoneNum}\n` +
+      `*Student Name*: ${student}\n` +
+      `*Child's Age*: ${age}\n` +
+      `*Program*: ${prog}\n` +
+      `*City / Village*: ${location}\n` +
       `---------------------------------\n` +
-      `Please confirm my visit date and time. Thank you!`;
+      `Our team will get back to you. Thank you!`;
 
     const waUrl = `https://wa.me/917995554105?text=${encodeURIComponent(waMessage)}`;
     window.open(waUrl, '_blank');
@@ -922,16 +951,34 @@ function initAiCallWidget() {
         break;
 
       case 2:
-        responseText = script.state2(leadData.childWing);
+        responseText = script.state2;
         addChatMessage(responseText, 'ai');
         speak(responseText);
         break;
 
       case 3:
-        responseText = script.state3(leadData.parentName);
+        responseText = script.state3(leadData.studentName);
         addChatMessage(responseText, 'ai');
         speak(responseText);
-        currentConversationState = 4;
+        break;
+
+      case 4:
+        responseText = script.state4(leadData.childAge);
+        addChatMessage(responseText, 'ai');
+        speak(responseText);
+        break;
+
+      case 5:
+        responseText = script.state5(leadData.program);
+        addChatMessage(responseText, 'ai');
+        speak(responseText);
+        break;
+
+      case 6:
+        responseText = script.state6(leadData.parentName);
+        addChatMessage(responseText, 'ai');
+        speak(responseText);
+        currentConversationState = 7;
         
         // Safety fallback timeout: wait 12s if speaking, or 3s if speaker is off
         if (wrapUpTimeout) {
@@ -960,34 +1007,51 @@ function initAiCallWidget() {
         break;
 
       case 1:
-        const lowerText = text.toLowerCase();
-        if (lowerText.includes('toddler') || lowerText.includes('టాడ్లర్')) {
-          leadData.childWing = 'Toddlers Wing (1.5 - 3.0 Years)';
-        } else if (lowerText.includes('nursery') || lowerText.includes('నర్సరీ')) {
-          leadData.childWing = 'Nursery Wing (3.0 - 4.0 Years)';
-        } else if (lowerText.includes('lower') || lowerText.includes('lkg') || lowerText.includes('l.k.g') || lowerText.includes('లోయర్')) {
-          leadData.childWing = 'Lower Kindergarten (4.0 - 5.0 Years)';
-        } else if (lowerText.includes('upper') || lowerText.includes('ukg') || lowerText.includes('u.k.g') || lowerText.includes('అప్పర్') || lowerText.includes('kindergarten')) {
-          leadData.childWing = 'Upper Kindergarten (5.0 - 6.0 Years)';
-        } else {
-          leadData.childWing = text;
-        }
-        
-        currentConversationState = 2;
-        setTimeout(triggerConversationState, 600);
-        break;
-
-      case 2:
         const digits = text.replace(/\D/g, '');
         if (digits.length >= 10) {
           leadData.phone = digits;
-          currentConversationState = 3;
+          currentConversationState = 2;
           setTimeout(triggerConversationState, 600);
         } else {
           const retryMessage = voiceScripts[currentLanguage].retryPhone;
           addChatMessage(retryMessage, 'ai');
           speak(retryMessage);
         }
+        break;
+
+      case 2:
+        leadData.studentName = text;
+        currentConversationState = 3;
+        setTimeout(triggerConversationState, 600);
+        break;
+
+      case 3:
+        leadData.childAge = text;
+        currentConversationState = 4;
+        setTimeout(triggerConversationState, 600);
+        break;
+
+      case 4:
+        const lowerText = text.toLowerCase();
+        if (lowerText.includes('toddler') || lowerText.includes('టాడ్లర్') || lowerText.includes('1.5') || lowerText.includes('one and a half') || lowerText.includes('ఒకటిన్నర') || lowerText.includes('1') || lowerText.includes('one')) {
+          leadData.program = 'Toddlers Wing (1.5 - 3.0 Years)';
+        } else if (lowerText.includes('nursery') || lowerText.includes('నర్సరీ') || lowerText.includes('3') || lowerText.includes('three')) {
+          leadData.program = 'Nursery Wing (3.0 - 4.0 Years)';
+        } else if (lowerText.includes('lower') || lowerText.includes('lkg') || lowerText.includes('l.k.g') || lowerText.includes('లోయర్') || lowerText.includes('4') || lowerText.includes('four')) {
+          leadData.program = 'Lower Kindergarten (4.0 - 5.0 Years)';
+        } else if (lowerText.includes('upper') || lowerText.includes('ukg') || lowerText.includes('u.k.g') || lowerText.includes('అప్పర్') || lowerText.includes('kindergarten') || lowerText.includes('5') || lowerText.includes('five') || lowerText.includes('6') || lowerText.includes('six')) {
+          leadData.program = 'Upper Kindergarten (5.0 - 6.0 Years)';
+        } else {
+          leadData.program = text;
+        }
+        currentConversationState = 5;
+        setTimeout(triggerConversationState, 600);
+        break;
+
+      case 5:
+        leadData.city = text;
+        currentConversationState = 6;
+        setTimeout(triggerConversationState, 600);
         break;
     }
   };
