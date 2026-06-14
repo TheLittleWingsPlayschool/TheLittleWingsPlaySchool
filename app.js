@@ -6,7 +6,6 @@
 document.addEventListener('DOMContentLoaded', () => {
   initNavigation();
   initMilestoneFinder();
-  initTestimonialsCarousel();
   initContactForm();
   initScrollEffects();
   initDraggableLogo();
@@ -324,71 +323,7 @@ function initMilestoneFinder() {
   startAutoplay();
 }
 
-/* ==========================================
-   3. TESTIMONIALS CAROUSEL
-   ========================================== */
-function initTestimonialsCarousel() {
-  const track = document.querySelector('.carousel-track');
-  const slides = Array.from(track.children);
-  const nextBtn = document.querySelector('.next-btn');
-  const prevBtn = document.querySelector('.prev-btn');
-  const dotsContainer = document.querySelector('.carousel-dots');
-  
-  let currentIndex = 0;
-  let autoPlayTimer;
 
-  // Create dot indicators
-  slides.forEach((_, index) => {
-    const dot = document.createElement('div');
-    dot.classList.add('dot');
-    if (index === 0) dot.classList.add('active');
-    dot.addEventListener('click', () => {
-      goToSlide(index);
-      resetAutoPlay();
-    });
-    dotsContainer.appendChild(dot);
-  });
-
-  const dots = Array.from(dotsContainer.children);
-
-  function goToSlide(index) {
-    if (index < 0) {
-      index = slides.length - 1;
-    } else if (index >= slides.length) {
-      index = 0;
-    }
-    
-    track.style.transform = `translateX(-${index * 100}%)`;
-    dots[currentIndex].classList.remove('active');
-    dots[index].classList.add('active');
-    currentIndex = index;
-  }
-
-  // Prev / Next Listeners
-  nextBtn.addEventListener('click', () => {
-    goToSlide(currentIndex + 1);
-    resetAutoPlay();
-  });
-
-  prevBtn.addEventListener('click', () => {
-    goToSlide(currentIndex - 1);
-    resetAutoPlay();
-  });
-
-  // Autoplay
-  function startAutoPlay() {
-    autoPlayTimer = setInterval(() => {
-      goToSlide(currentIndex + 1);
-    }, 6000);
-  }
-
-  function resetAutoPlay() {
-    clearInterval(autoPlayTimer);
-    startAutoPlay();
-  }
-
-  startAutoPlay();
-}
 
 /* ==========================================
    4. CONTACT FORM VALIDATION & INTERACTION
