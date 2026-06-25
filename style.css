@@ -2181,3 +2181,47 @@ footer {
     font-size: 1.3rem;
   }
 }
+
+@media (max-width: 480px) {
+  .ai-call-card {
+    padding: 1.8rem 1.2rem 1.2rem;
+    border-radius: 28px;
+    width: 92%;
+  }
+  .ai-avatar-container {
+    width: 76px;
+    height: 76px;
+    margin-bottom: 0.8rem;
+  }
+  .ai-avatar-pulse {
+    width: 86px;
+    height: 86px;
+  }
+  .ai-name {
+    font-size: 1.4rem;
+  }
+  .ai-conversation-log {
+    height: 135px;
+    padding: 0.8rem;
+    margin-bottom: 1rem;
+  }
+  .chat-bubble {
+    font-size: 0.85rem;
+    padding: 0.6rem 0.8rem;
+  }
+  .ai-input-group input {
+    padding: 0.7rem 0.9rem;
+    font-size: 0.9rem;
+    border-radius: 12px;
+  }
+  .ai-input-group button {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+  }
+  .call-action-btn {
+    width: 45px;
+    height: 45px;
+    font-size: 1.1rem;
+  }
+}
