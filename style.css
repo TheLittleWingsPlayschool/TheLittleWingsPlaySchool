@@ -2264,3 +2264,21 @@ footer {
     font-size: 1.1rem;
   }
 }
+
+/* INSTAGRAM SHOWCASE & STORY HIGHLIGHTS */
+.insta-section { background: #fdfbf7; }
+.story-ring {
+  width: 76px; height: 76px; border-radius: 50%; padding: 3px;
+  background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888);
+  cursor: pointer; transition: transform 0.3s ease, box-shadow 0.3s ease; margin: 0 auto;
+}
+.story-ring:hover { transform: scale(1.1); box-shadow: 0 8px 20px rgba(220, 39, 67, 0.3); }
+.story-icon {
+  width: 100%; height: 100%; background: #ffffff; border-radius: 50%;
+  display: flex; align-items: center; justify-content: center; font-size: 1.8rem; border: 2px solid #ffffff;
+}
+.story-label { display: block; margin-top: 6px; font-size: 0.85rem; font-weight: 600; color: #333333; }
+.reel-card { transition: transform 0.3s ease, box-shadow 0.3s ease; }
+.reel-card:hover { transform: translateY(-6px); box-shadow: 0 12px 25px rgba(0,0,0,0.12) !important; }
+.btn-insta-gradient { background: linear-gradient(45deg, #f09433, #e6683c, #dc2743, #cc2366, #bc1888); border: none; transition: transform 0.25s ease; }
+.btn-insta-gradient:hover { opacity: 0.95; transform: translateY(-2px); color: #ffffff !important; }
