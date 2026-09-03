@@ -2334,3 +2334,33 @@ html, body { overflow-x: hidden !important; width: 100% !important; }
   .whatsapp-float { bottom: 85px !important; right: 20px !important; }
   .call-tooltip, .whatsapp-tooltip { display: none !important; }
 }
+/* PERFECT FLOATING BUTTON ALIGNMENT FOR MOBILE & DESKTOP */
+.ai-call-float, .whatsapp-float {
+  position: fixed !important;
+  right: 20px !important;
+  width: 56px !important;
+  height: 56px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  z-index: 9999 !important;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25) !important;
+  transition: all 0.3s ease !important;
+}
+.ai-call-float { bottom: 25px !important; }
+.whatsapp-float { bottom: 95px !important; }
+.ai-call-float img, .whatsapp-float i, .whatsapp-float img {
+  width: 30px !important;
+  height: 30px !important;
+  object-fit: contain !important;
+  margin: 0 !important;
+}
+.call-tooltip, .whatsapp-tooltip {
+  position: absolute !important;
+  right: 70px !important;
+  top: 50% !important;
+  transform: translateY(-50%) !important;
+  white-space: nowrap !important;
+  pointer-events: none !important;
+}
