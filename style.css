@@ -2364,3 +2364,11 @@ html, body { overflow-x: hidden !important; width: 100% !important; }
   white-space: nowrap !important;
   pointer-events: none !important;
 }
+/* WATERMARK BACKGROUND BEHIND PROGRAM CARDS */
+#programs { position: relative !important; background-color: #faf8f5 !important; overflow: hidden !important; }
+#programs::before { content: '' !important; position: absolute !important; bottom: -20px !important; left: -80px !important; width: 380px !important; height: 380px !important; background: url('assets/logo.jpeg') no-repeat center center / contain !important; opacity: 0.12 !important; pointer-events: none !important; z-index: 0 !important; }
+#programs::after { content: '' !important; position: absolute !important; top: 5% !important; right: -80px !important; width: 380px !important; height: 380px !important; background: url('assets/logo.jpeg') no-repeat center center / contain !important; opacity: 0.12 !important; pointer-events: none !important; z-index: 0 !important; }
+#programs .container { position: relative !important; z-index: 1 !important; }
+
+/* ADJUSTED PHOTO HEIGHT & PERFECT FRAMING */
+#real-photos-gallery img, .real-photo-img { height: 420px !important; object-fit: cover !important; object-position: center top !important; }
